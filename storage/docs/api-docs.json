@@ -1,0 +1,309 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "RevolvAir API",
+        "description": "Improve air quality for the comunity",
+        "termsOfService": "",
+        "contact": {
+            "email": "gsimard@cimmi.qc.ca"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "http://atomrace.tk"
+        },
+        "version": "1.0.0"
+    },
+    "host": "165.227.43.142:8000",
+    "basePath": "/api",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/stations": {
+            "get": {
+                "tags": [
+                    "station"
+                ],
+                "summary": "List all Stations",
+                "responses": {
+                    "200": {
+                        "description": "station response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Station"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stations/{station_id}": {
+            "get": {
+                "tags": [
+                    "station"
+                ],
+                "summary": "Find stations by id",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "station_id",
+                        "in": "path",
+                        "description": "ID of station to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Station"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "station"
+                ],
+                "summary": "Update an existing station",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "station_id",
+                        "in": "path",
+                        "description": "ID of station to update",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Station not found"
+                    }
+                },
+                "security": [
+                    {
+                        "auth:api": [
+                            "scope:admin"
+                        ]
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "station"
+                ],
+                "summary": "Deletes a station",
+                "parameters": [
+                    {
+                        "name": "station_id",
+                        "in": "path",
+                        "description": "Station id to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "api_key",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "auth:api": [
+                            "scope:admin"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "\nCity\n": {
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "\nname\n": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "\nHistory\n": {
+            "required": [
+                "lastHourReadings",
+                "lastDayReadings",
+                "lastWeekReadings"
+            ],
+            "properties": {
+                "\nlastHourReadings\n": {
+                    "type": "float"
+                },
+                "\nlastDayReadings\n": {
+                    "type": "float"
+                },
+                "\nlastWeekReadings\n": {
+                    "type": "float"
+                }
+            },
+            "type": "object"
+        },
+        "\nReadingType\n": {
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "\ntype\n": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "\nSensor\n": {
+            "required": [
+                "model_id",
+                "station_id"
+            ],
+            "properties": {
+                "\nmodel_id\n": {
+                    "type": "int"
+                },
+                "\nstation_id\n": {
+                    "type": "int"
+                }
+            },
+            "type": "object"
+        },
+        "\nSensorModel\n": {
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "\nname\n": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "\nSensorReading\n": {
+            "required": [
+                "value",
+                "sensor_id",
+                "latitude",
+                "longitude",
+                "type"
+            ],
+            "properties": {
+                "\nvalue\n": {
+                    "type": "float"
+                },
+                "\nsensor_id\n": {
+                    "type": "unsignedint"
+                },
+                "\nlatitude\n": {
+                    "type": "float"
+                },
+                "\nlongitude\n": {
+                    "type": "float"
+                },
+                "\ntype\n": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Station": {
+            "required": [
+                "name",
+                "city",
+                "latitude",
+                "longitude",
+                "is_private",
+                "updated_at"
+            ],
+            "properties": {
+                "\nname\n": {
+                    "type": "string"
+                },
+                "\ncity\n": {
+                    "type": "string"
+                },
+                "\nlatitude\n": {
+                    "type": "float"
+                },
+                "\nlongitude\n": {
+                    "type": "float"
+                },
+                "\nis_private\n": {
+                    "type": "boolean"
+                },
+                "\nupdated_at\n": {
+                    "type": "datetime"
+                }
+            },
+            "type": "object"
+        },
+        "\nUser\n": {
+            "required": [
+                "name",
+                "email",
+                "password",
+                "type"
+            ],
+            "properties": {
+                "\nname\n": {
+                    "type": "string"
+                },
+                "\nemail\n": {
+                    "type": "string"
+                },
+                "\npassword\n": {
+                    "type": "string"
+                },
+                "\ntype\n": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "securityDefinitions": {
+        "revolvair_auth": {
+            "type": "oauth2",
+            "flow": "password",
+            "tokenUrl": "/oauth/token",
+            "scopes": {
+                "admin": "admin scope",
+                "station-owner": "station-owner scope"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Air analysis for health",
+        "url": "http://atomrace.tk"
+    }
+}

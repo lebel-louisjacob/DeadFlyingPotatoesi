@@ -1,0 +1,62 @@
+version: '2'
+
+services:
+    dbstaging:
+        image: mysql:5.7
+        container_name: laravel_dbstaging
+        restart: always
+        volumes:
+          - ~/db_data:/var/lib/mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: revolvair
+          MYSQL_USER: staging
+          MYSQL_PASSWORD: staging
+        ports:
+         - 8777:3306
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: laravel_phpmyadmin
+        links:
+         - dbstaging:mysql
+        ports:
+         - 8888:80
+        environment:
+          PMA_HOST: dbstaging
+          MYSQL_ROOT_PASSWORD: root
+    staging_backend:
+        build: ./staging_backend
+        image: laravel_staging_backend
+        container_name: laravel_staging_backend
+        links:
+         - dbstaging:dbstaging
+        ports:
+         - 8000:8000
+    test_backend:
+        build: ./test_backend
+        image: laravel_test_backend
+        container_name: laravel_test_backend
+        environment:
+          - BRANCH=sprint1
+    staging_frontend:
+        build: ./staging_frontend
+        image: laravel_staging_frontend
+        container_name: laravel_staging_frontend
+        ports:
+         - 8200:4200
+    test_frontend:
+        build: ./test_frontend
+        image: laravel_test_frontend
+        container_name: laravel_test_frontend
+        environment:
+         - BRANCH=sprint1
+    jenkins:
+        build: ./jenkins
+        image: laravel_jenkins
+        container_name: laravel_jenkins
+        ports:
+         - "8080:8080"
+        volumes:
+         - ~/jenkins_home:/var/jenkins_home
+         - /var/run/docker.sock:/var/run/docker.sock
+         
