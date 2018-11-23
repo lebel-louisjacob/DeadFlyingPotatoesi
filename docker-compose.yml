@@ -1,7 +1,7 @@
 version: '2'
 services:
 
-  # The Application
+  # Application
   app:
     build:
       context: ./
@@ -13,7 +13,7 @@ services:
       - "DB_PORT=3306"
       - "DB_HOST=database"
 
-  # The Web Server
+  # Web Server
   web:
     build:
       context: ./
@@ -23,12 +23,11 @@ services:
       - app
     ports:
       - 80:80
-      - 443:443
     volumes:
       - ./certs:/etc/letsencrypt
       - ./certs-data:/data/letsencrypt
 
-  # The Database
+  # Database
   database:
     image: mysql:5.6
     volumes:
